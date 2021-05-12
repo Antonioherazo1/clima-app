@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState, Component } from 'react'
+import React, { useEffect, useState} from 'react'
 
 function App() {
  
@@ -13,7 +13,6 @@ function App() {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setlongitude] = useState(0);
   const [apiData, setApiData] = useState({});
-  // const [apiUrl, setApiUrl] = useState('');
 
   
     // Side effect
@@ -34,7 +33,7 @@ function App() {
         setIcono(getWeatherIcon(apiData.weather[0].id));
         setTexto(getMessage(farenheitToCelsius(apiData.main.temp)));
         setTemp(farenheitToCelsius(apiData.main.temp));
-    }, []);
+    },);
 
     
     
@@ -64,7 +63,7 @@ function App() {
       return '☃️';
     } else if (condition < 800) {
       return '🌫';
-    } else if (condition == 800) {
+    } else if (condition === 800) {
       return '☀️';
     } else if (condition <= 804) {
       return '☁️';
@@ -86,8 +85,8 @@ function App() {
   }
 
   const changeMesureTemp = () => {
-    grade == 'F°' ? setGrade('C°') : setGrade('F°');
-    grade == 'F°' ? setTemp(apiData.main.temp) : setTemp(farenheitToCelsius(apiData.main.temp));
+    grade === 'F°' ? setGrade('C°') : setGrade('F°');
+    grade === 'F°' ? setTemp(apiData.main.temp) : setTemp(farenheitToCelsius(apiData.main.temp));
   }
 
   
