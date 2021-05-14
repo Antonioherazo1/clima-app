@@ -20,7 +20,7 @@ function App() {
       if(latitude !== 0 && longitude !== 0){
 
         let apiKey ='526969a6e3b91012a7a00d03486a6b25';
-        let apiUrl=`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+        let apiUrl=`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
   
         fetch(apiUrl)
           .then((res) => res.json())
