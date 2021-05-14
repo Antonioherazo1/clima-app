@@ -14,7 +14,7 @@ function App() {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setlongitude] = useState(0);
     
-    // Side effect
+    // Side effecttt
     useEffect(() => {
 
       if(latitude !== 0 && longitude !== 0){
@@ -91,13 +91,6 @@ function App() {
   }
 
   const changeMesureTemp = () => {
-    // if(grade === 'F°') {
-    //   setGrade('F°');
-    //   setTemp(`${fToC(tempF)} C°`)
-    // }else{
-    //   setGrade('C°');
-    //   setTemp(`${tempF} F°`)
-    // }
     grade === 'F°' ? setTemp(`${tempF} F°`):setTemp(`${fToC(tempF)} C°`);
     grade === 'F°' ? setGrade('C°') : setGrade('F°');
     
