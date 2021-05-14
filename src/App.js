@@ -8,48 +8,54 @@ function App() {
   const [ciudad, setCiudad] = useState('');
   const [icono, setIcono] = useState('');
   const [texto, setTexto] = useState('');
+  const [tempF, setTempF] = useState('');
   const [temp, setTemp] = useState('');
-  const [grade, setGrade] = useState('F°');
+  const [grade, setGrade] = useState('C°');
   const [latitude, setLatitude] = useState(0);
   const [longitude, setlongitude] = useState(0);
-  const [apiData, setApiData] = useState({});
-
-  
+    
     // Side effect
     useEffect(() => {
+
+      if(latitude !== 0 && longitude !== 0){
+
+        let apiKey ='526969a6e3b91012a7a00d03486a6b25';
+        let apiUrl=`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+  
+        fetch(apiUrl)
+          .then((res) => res.json())
+          .then((data) => {
+            setPais(data.sys.country);
+            setCiudad(data.name);
+            setIcono(getWeatherIcon(data.weather[0].id));
+            setTempF(parseInt(kTof(data.main.temp)));  
+            setTemp(`${parseInt(kTof(data.main.temp))} F°`);  
+            setTexto(getMessage(fToC(kTof(data.main.temp))));     
+          });   
+      }
+    },[latitude,longitude, tempF]);
+
+
+    useEffect(()=> {
+    
+      const getLocation = async ()=>{
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(function(position){
+            setLatitude(position.coords.latitude);
+            setlongitude(position.coords.longitude);
+          }); 
+        }
+      };
       getLocation();
-      let apiKey ='526969a6e3b91012a7a00d03486a6b25';
-      let apiUrl=`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
-
-      fetch(apiUrl)
-        .then((res) => res.json())
-        .then((data) => {
-          setApiData(data)
-        });
-
-        setPais(apiData.sys.country);
-        setCiudad(apiData.name);
-        // console.log(latitude);
-        setIcono(getWeatherIcon(apiData.weather[0].id));
-        setTexto(getMessage(farenheitToCelsius(apiData.main.temp)));
-        setTemp(farenheitToCelsius(apiData.main.temp));
-    },);
-
-    
+    },[])
     
 
-  const getLocation = async ()=>{
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function(position){
-        setLatitude(position.coords.latitude);
-        setlongitude(position.coords.longitude);
-      });
-    }
-  };
+  const kTof = (k) => {
+    return 1.8*(k-273) + 32;
+  }
 
-  const farenheitToCelsius = (K) => {
-    return K - 273.15;
-    
+  const fToC = (f) => {
+    return parseInt((f - 32)/1.8);
   };
 
   const getWeatherIcon = (condition)=> {
@@ -85,8 +91,16 @@ function App() {
   }
 
   const changeMesureTemp = () => {
+    // if(grade === 'F°') {
+    //   setGrade('F°');
+    //   setTemp(`${fToC(tempF)} C°`)
+    // }else{
+    //   setGrade('C°');
+    //   setTemp(`${tempF} F°`)
+    // }
+    grade === 'F°' ? setTemp(`${tempF} F°`):setTemp(`${fToC(tempF)} C°`);
     grade === 'F°' ? setGrade('C°') : setGrade('F°');
-    grade === 'F°' ? setTemp(apiData.main.temp) : setTemp(farenheitToCelsius(apiData.main.temp));
+    
   }
 
   
@@ -100,7 +114,6 @@ function App() {
       <p>Texto Descriptivo: {texto}</p>
       <p>Temperatura: {temp}</p>
       <button onClick ={()=>{changeMesureTemp()}}>{grade}</button>
-      {/* <p>{apiUrl}</p> */}
     </div>
   );
 }
